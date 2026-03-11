@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Fuel Calculator</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; background: #f4f4f9; }
+        .container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 350px; text-align: center; }
+        .step { display: none; }
+        .active { display: block; }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <select id="lang" onchange="updateLabels()">
+        <option value="pt">Português (BR)</option>
+        <option value="en">English (US)</option>
+    </select>
+
+    <div id="step1" class="step active">
+        <p id="label1">Qual o consumo do seu carro (KM/L)?</p>
+        <input type="number" id="input1" step="any">
+        <button onclick="next(1)">OK</button>
+    </div>
+
+    <div id="step2" class="step">
+        <p id="label2">Qual o valor do litro?</p>
+        <input type="number" id="input2" step="any">
+        <button onclick="next(2)">OK</button>
+    </div>
+
+    <div id="step3" class="step">
+        <p id="label3">Qual a distância da viagem?</p>
+        <input type="number" id="input3" step="any">
+        <button onclick="calculate()">OK</button>
+    </div>
+
+    <div id="result" class="step">
+        <h3 id="finalResult"></h3>
+        <button onclick="location.reload()">Reiniciar</button>
+    </div>
+</div>
+
+<script>
+    let data = {};
+    const texts = {
+        pt: { 
+            l1: "Qual o consumo do seu carro (KM/L)?", 
+            l2: "Qual o valor do litro?", 
+            l3: "Qual a distância em KM?", 
+            res: "Você gastará R$ ", 
+            rt: " (Ida/Volta: " 
+        },
+        en: { 
+            l1: "What is your car's fuel efficiency (MPG)?", 
+            l2: "What is the price per gallon?", 
+            l3: "What is the trip distance in miles?", 
+            res: "You will spend $ ", 
+            rt: " (Round trip: " 
+        }
+    };
+
+    function updateLabels() {
+        const lang = document.getElementById('lang').value;
+        document.getElementById('label1').innerText = texts[lang].l1;
+        document.getElementById('label2').innerText = texts[lang].l2;
+        document.getElementById('label3').innerText = texts[lang].l3;
+    }
+
+    function next(step) {
+        const val = document.getElementById('input' + step).value;
+        if (!val) return alert("Preencha o campo!");
+        data['val' + step] = val;
+        document.getElementById('step' + step).classList.remove('active');
+        document.getElementById('step' + (step + 1)).classList.add('active');
+    }
+
+    function calculate() {
+        const lang = document.getElementById('lang').value;
+        const dist = parseFloat(document.getElementById('input3').value);
+        if (!dist) return alert("Preencha a distância!");
+        
+        const consumo = parseFloat(data.val1);
+        const preco = parseFloat(data.val2);
+        const total = (dist / consumo) * preco;
+        const idaVolta = total * 2;
+        
+        document.getElementById('step3').classList.remove('active');
+        document.getElementById('result').classList.add('active');
+        document.getElementById('finalResult').innerText = texts[lang].res + total.toFixed(2) + texts[lang].rt + idaVolta.toFixed(2) + ")";
+    }
+</script>
+</body>
+</html>
