@@ -14,3 +14,6 @@ A simple web tool that calculates the fuel cost of a trip.
   ## Technologies
   - HTML
   - Vanilla JavaScript
+
+## Acess
+https://lhznx9.github.io/fuel-calculator/
